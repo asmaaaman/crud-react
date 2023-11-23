@@ -1,0 +1,17 @@
+{
+  "posts": [
+    {
+      "title": "test",
+      "description": "test",
+      "id": 1
+    },
+    {
+      "title": "Post One",
+      "description": "Welcome to our Company",
+      "id": 2
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}
