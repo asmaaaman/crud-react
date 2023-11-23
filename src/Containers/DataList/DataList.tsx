@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { confirmAlert } from "react-confirm-alert";
+import { toast } from "react-toastify";
+import "react-confirm-alert/src/react-confirm-alert.css";
 import axiosInstance from "../../Network/index";
 import DataTable from "../../Components/Table/DataTable";
 import Button from "../../Components/Button/Button";
@@ -18,19 +21,43 @@ const columns = [
 ];
 
 const DataList: React.FC = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPostData] = useState<Post[]>([]);
+  const fetchPostData = async () => {
+    try {
+      const response = await axiosInstance.get("/posts");
+      setPostData(response.data);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
+  };
 
   useEffect(() => {
-    axiosInstance
-      .get("/posts")
-      .then((response) => {
-        setPosts(response.data);
-      })
-
-      .catch((error) => {
-        console.error("Component-specific error handling:", error);
-      });
+    // Fetch data when the component mounts
+    fetchPostData();
   }, []);
+
+  const handleDelete = async (id: string) => {
+    try {
+      // Make DELETE request to JSON Server
+      await axiosInstance.delete(`/posts/${id}`);
+      console.log(`Post with ID ${id} deleted successfully!`);
+
+      // Update the list by refetching the data
+      fetchPostData();
+
+      // Show success toast
+      toast.success("Post deleted successfully!", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    } catch (error) {
+      console.error(`Error deleting post with ID ${id}:`, error);
+    }
+  };
   return (
     <div>
       <div className="m-4 flex justify-end">
@@ -42,7 +69,7 @@ const DataList: React.FC = () => {
         />
       </div>
 
-      <DataTable data={posts || []} columns={columns} />
+      <DataTable data={posts || []} columns={columns} onDelete={handleDelete} />
     </div>
   );
 };
