@@ -1,14 +1,11 @@
-// axiosInstance.js
-
 import axios from "axios";
 
-// Create an Axios instance
+const isProduction = process.env.NODE_ENV === "production";
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3030", // Replace with your JSON Server URL
-  timeout: 5000, // Timeout in milliseconds
+  baseURL: isProduction ? "/api" : "http://localhost:3030",
+  timeout: 5000,
 });
 
-// Request interceptor to add authorization header or perform other actions before the request is sent
 axiosInstance.interceptors.request.use(
   (config) => {
     return config;
@@ -18,7 +15,6 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle errors globally
 axiosInstance.interceptors.response.use(
   (response) => {
     return response;

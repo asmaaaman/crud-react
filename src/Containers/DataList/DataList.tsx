@@ -32,20 +32,17 @@ const DataList: React.FC = () => {
   };
 
   useEffect(() => {
-    // Fetch data when the component mounts
+   
     fetchPostData();
   }, []);
 
   const handleDelete = async (id: string) => {
     try {
-      // Make DELETE request to JSON Server
       await axiosInstance.delete(`/posts/${id}`);
       console.log(`Post with ID ${id} deleted successfully!`);
 
-      // Update the list by refetching the data
       fetchPostData();
 
-      // Show success toast
       toast.success("Post deleted successfully!", {
         position: "bottom-right",
         autoClose: 3000,
